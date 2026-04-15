@@ -49,4 +49,17 @@ public class AuthServiceImpl implements AuthService {
 
 
     }
+
+
+    @Override
+    public User login(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Invalid email or password!"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid email or password!");
+        }
+
+        return user;
+    }
 }
