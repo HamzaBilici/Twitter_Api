@@ -1,6 +1,7 @@
 package com.hbilici.twitter_api.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -33,14 +34,12 @@ public class Tweet {
     @Size(max = 280)
     private String content;
 
-    @NotNull
     @CreationTimestamp
     private LocalDateTime date;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    @ToString.Exclude
+    @JsonIgnoreProperties({"tweets", "password", "authorities"})
     private User user;
 
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL)
@@ -50,5 +49,15 @@ public class Tweet {
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Retweet> retweets = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Set<Comment> comments = new HashSet<>();
+
+    @PrePersist
+    protected void onCreate() {
+        this.date = LocalDateTime.now();
+    }
 
 }

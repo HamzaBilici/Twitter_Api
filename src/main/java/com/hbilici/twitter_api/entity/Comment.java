@@ -1,5 +1,6 @@
 package com.hbilici.twitter_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +29,6 @@ public class Comment {
     @Size(max = 280)
     private String content;
 
-    @NotNull
     @CreationTimestamp
     private LocalDateTime date;
 
@@ -39,8 +39,9 @@ public class Comment {
     private User user;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tweet_id")
     @ToString.Exclude
+    @JsonIgnore
     private Tweet tweet;
 }

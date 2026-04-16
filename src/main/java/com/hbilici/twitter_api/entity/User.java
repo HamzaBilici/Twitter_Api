@@ -1,5 +1,6 @@
 package com.hbilici.twitter_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -39,6 +40,7 @@ public class User implements UserDetails {
 
     @NotBlank
     @Size(max = 200)
+    @JsonIgnore
     private String password;
 
     @ToString.Exclude
@@ -52,18 +54,22 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private Set<Tweet> tweets = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private Set<Like> likes = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private Set<Retweet> retweets = new HashSet<>();
 
 

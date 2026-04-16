@@ -21,7 +21,7 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public List<Tweet> findAll() {
-        return tweetRepository.findAll();
+        return tweetRepository.findAllByOrderByDateDesc();
     }
 
     @Override
@@ -29,6 +29,8 @@ public class TweetServiceImpl implements TweetService {
         return tweetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tweet not found with id: " + id));
     }
+
+
 
     @Override
     public void delete(Long id, String userEmail) {
@@ -45,4 +47,5 @@ public class TweetServiceImpl implements TweetService {
     public Set<Tweet> findByUser(Long userId) {
         return null;
     }
+
 }

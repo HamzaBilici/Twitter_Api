@@ -1,3 +1,3 @@
 package com.hbilici.twitter_api.dto.request;
 
-public record TweetRequest(String content) {}
+public record CommentRequest(String text) {}

@@ -22,7 +22,7 @@ public class RetweetServiceImpl implements RetweetService {
 
     @Override
     @Transactional
-    public void toggleRetweet(Long tweetId, String userEmail) {
+    public Optional<Retweet> toggleRetweet(Long tweetId, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -33,11 +33,12 @@ public class RetweetServiceImpl implements RetweetService {
 
         if (existingRetweet.isPresent()) {
             retweetRepository.delete(existingRetweet.get());
+            return Optional.empty();
         } else {
             Retweet retweet = new Retweet();
             retweet.setUser(user);
             retweet.setTweet(tweet);
-            retweetRepository.save(retweet);
+            return Optional.of(retweetRepository.save(retweet));
         }
     }
 
