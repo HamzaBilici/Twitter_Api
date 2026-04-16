@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/retweets")
+@RequestMapping("/retweet")
 public class RetweetController {
 
     @Autowired
@@ -28,16 +28,12 @@ public class RetweetController {
 
     @PostMapping("/{tweetId}")
     public ResponseEntity<RetweetResponse> toggleRetweet(@PathVariable Long tweetId) {
-        String activeUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<Retweet> result = retweetService.toggleRetweet(tweetId, activeUserEmail);
-
-        if (result.isPresent()) {
-            RetweetResponse response = RetweetMapper.toResponse(result.get());
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        }
-
-        return ResponseEntity.noContent().build();
+        return retweetService.toggleRetweet(tweetId, email)
+                .map(retweet -> ResponseEntity.status(HttpStatus.CREATED)
+                        .body(RetweetMapper.toResponse(retweet)))
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @GetMapping("/count/{tweetId}")

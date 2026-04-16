@@ -8,36 +8,51 @@ import com.hbilici.twitter_api.repository.UserRepository;
 import com.hbilici.twitter_api.service.TweetService;
 import com.hbilici.twitter_api.util.TweetMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/tweets")
-@AllArgsConstructor
+@RequestMapping("/tweet")
 public class TweetController {
 
-    private final TweetService tweetService;
-    private final UserRepository userRepository; // Şimdilik basitçe user'ı bulmak için
+    @Autowired
+    private  TweetService tweetService;
 
     @PostMapping
-    public TweetResponse save(@RequestBody TweetRequest tweetRequest) {
-        String activeUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    public ResponseEntity<TweetResponse> save(@RequestBody TweetRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.save(request, email));
+    }
 
-        User user = userRepository.findByEmail(activeUserEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    @GetMapping("/{id}")
+    public TweetResponse findById(@PathVariable Long id) {
+        return tweetService.findById(id);
+    }
 
-        Tweet tweet = new Tweet();
-        tweet.setContent(tweetRequest.content());
-        tweet.setUser(user);
+    @GetMapping("/findByUserId/{userId}")
+    public List<TweetResponse> findByUserId(@PathVariable Long userId) {
+        return tweetService.findByUserId(userId);
+    }
 
-        return TweetMapper.toResponse(tweetService.save(tweet));
+    @PutMapping("/{id}")
+    public TweetResponse update(@PathVariable Long id, @RequestBody TweetRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return tweetService.update(id, request, email);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        tweetService.delete(id, email);
+        return ResponseEntity.noContent().build();
     }
     @GetMapping
     public List<TweetResponse> findAll() {
-        return tweetService.findAll().stream()
-                .map(TweetMapper::toResponse)
-                .toList();
+        return tweetService.findAll();
     }
 }

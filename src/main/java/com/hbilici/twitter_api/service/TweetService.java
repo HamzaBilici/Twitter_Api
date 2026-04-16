@@ -1,13 +1,15 @@
 package com.hbilici.twitter_api.service;
 
+import com.hbilici.twitter_api.dto.request.TweetRequest;
+import com.hbilici.twitter_api.dto.response.TweetResponse;
 import com.hbilici.twitter_api.entity.Tweet;
 import java.util.List;
-import java.util.Set;
 
-public interface TweetService {
-    Tweet save(Tweet tweet);
-    List<Tweet> findAll();
-    Tweet findById(Long id);
-    void delete(Long id, String userEmail);
-    Set<Tweet> findByUser(Long userId);
-}
+    public interface TweetService {
+        TweetResponse save(TweetRequest request, String email);
+        List<TweetResponse> findAll();
+        TweetResponse findById(Long id);
+        TweetResponse update(Long id, TweetRequest request, String email);
+        void delete(Long id, String email);
+        List<TweetResponse> findByUserId(Long userId);
+    }

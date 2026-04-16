@@ -9,6 +9,5 @@ import java.util.Set;
 
 public interface TweetRepository extends JpaRepository<Tweet,Long> {
 
-    Set<Tweet> findByUserOrderByDateDesc(User user);
-    List<Tweet> findAllByOrderByDateDesc();
+    List<Tweet> findAllByUserId(Long userId);
 }

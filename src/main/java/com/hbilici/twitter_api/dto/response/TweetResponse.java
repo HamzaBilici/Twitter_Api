@@ -10,4 +10,12 @@ public record TweetResponse(
         Integer likeCount,
         Integer retweetCount,
         Integer commentCount
-) {}
+) {
+    public String getContent() {
+        return content;
+    }
+
+    public long getId() {
+        return id;
+    }
+}

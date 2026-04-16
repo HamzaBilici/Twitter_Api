@@ -1,15 +1,13 @@
-package com.hbilici.twitter_api.exceptions;
+package com.hbilici.twitter_api.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @AllArgsConstructor
-public class ErrorResponse {
+public class TwitterErrorResponse {
     private String message;
     private int status;
     private long timestamp;

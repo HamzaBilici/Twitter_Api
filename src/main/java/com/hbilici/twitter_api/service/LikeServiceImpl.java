@@ -22,22 +22,22 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     @Transactional
-    public void toggleLike(Long tweetId, String userEmail) {
+    public Optional<Like> toggleLike(Long tweetId, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
         Tweet tweet = tweetRepository.findById(tweetId)
-                .orElseThrow(() -> new RuntimeException("Tweet not found"));
+                .orElseThrow(() -> new RuntimeException("Tweet bulunamadı"));
 
         Optional<Like> existingLike = likeRepository.findByUserAndTweet(user, tweet);
 
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
+            return Optional.empty();
         } else {
             Like like = new Like();
             like.setUser(user);
             like.setTweet(tweet);
-            likeRepository.save(like);
+            return Optional.ofNullable(likeRepository.save(like));
         }
     }
 
